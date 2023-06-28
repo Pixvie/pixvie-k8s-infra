@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: pixvie-fe-deployment
+    labels:
+        app: pixvie-fe
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: pixvie-fe
+    template:
+        metadata:
+            labels:
+                app: pixvie-fe
+        spec:
+            containers:
+                - name: pixvie-fe
+                  image: eu.gcr.io/unified-firefly-385717/pixvie-fe:latest
+                  ports:
+                      - containerPort: 80
+                  env: 
+                  - name: VUE_APP_API_SERVER
+                    value: https://api.pixvie.tech
+                  - name: VUE_APP_SOCKET_SERVER 
+                    value: https://api.pixvie.tech
