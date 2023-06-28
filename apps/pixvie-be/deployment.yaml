@@ -16,7 +16,7 @@ spec:
         spec:
             containers:
                 - name: pixvie-be
-                  image: emrullahcirit/pixvie-be:latest
+                  image: eu.gcr.io/unified-firefly-385717/pixvie-be:latest
                   ports:
                       - containerPort: 3000
                   env:
