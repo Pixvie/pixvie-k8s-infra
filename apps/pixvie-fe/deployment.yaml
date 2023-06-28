@@ -24,3 +24,20 @@ spec:
                     value: https://api.pixvie.tech
                   - name: VUE_APP_SOCKET_SERVER 
                     value: https://api.pixvie.tech
+
+---
+
+apiVersion: "v1"
+kind: "Service"
+metadata:
+    name: "pixvie-fe-deployment-service"
+    labels:
+        app: "pixvie-fe"
+spec:
+    ports:
+        - protocol: "TCP"
+          port: 80
+    selector:
+        app: "pixvie-fe"
+    type: "LoadBalancer"
+    loadBalancerIP: ""
