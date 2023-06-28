@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: pixvie-deployment
+    labels:
+        app: pixvie-be
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: pixvie-be
+    template:
+        metadata:
+            labels:
+                app: pixvie-be
+        spec:
+            containers:
+                - name: pixvie-be
+                  image: emrullahcirit/pixvie-be:latest
+                  ports:
+                      - containerPort: 3000
+                  env:
+                    - name: MONGODB_URI
+                      valueFrom:
+                        secretKeyRef:
+                            name: my-secret
+                            key: MONGODB_URI
+                    - name: JWT_SECRET
+                      valueFrom:
+                        secretKeyRef:
+                            name: my-secret
+                            key: JWT_SECRET
+                    - name: COOKIE_SECRET
+                      valueFrom:
+                        secretKeyRef:
+                            name: my-secret
+                            key: COOKIE_SECRET
+                    - name: PORT
+                      valueFrom:
+                        secretKeyRef:
+                            name: my-secret
+                            key: PORT
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: pixvie-be
+  name: pixvie-deployment-service
+  namespace: default
+spec:
+  ports:
+  - protocol: TCP
+    port: 80 
+  selector:
+    app: pixvie-be
+  type: LoadBalancer
+
+---
+
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    COOKIE_SECRET: cGl4dmllLWU2Y2NiOGExNjVhMTQ5NzNmYzUwYTliMWUxY2U1ZTA4
+    JWT_SECRET: cGl4dmllLWY4MWI2YTYxNzk1ODI1ZmEyMTk0OTgxMTg1ZjhkZDMw
+    MONGODB_URI: bW9uZ29kYitzcnY6Ly9waXh2aWU6cGl4dmllQHBpeHZpZS5nMXcwa3gyLm1vbmdvZGIubmV0Lz9yZXRyeVdyaXRlcz10cnVlJnc9bWFqb3JpdHk=
+    PORT: ODA=
+  kind: Secret
+  metadata:
+    name: my-secret
+    namespace: default
+  type: Opaque
+kind: List
